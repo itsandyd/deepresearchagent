@@ -5,12 +5,11 @@ import { jsPDF } from "jspdf"
 const prisma = new PrismaClient()
 
 export async function GET(
-  request: NextRequest, 
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
-    // Need to properly await the params in Next.js App Router
-    const params = await context.params
+    // No need to await params - it's already available
     const reportId = Number.parseInt(params.id, 10)
 
     if (isNaN(reportId)) {
