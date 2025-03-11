@@ -4,6 +4,8 @@ import { jsPDF } from "jspdf"
 
 const prisma = new PrismaClient()
 
+export const maxDuration = 300
+
 // Route handler for dynamic [id] route
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {

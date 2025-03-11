@@ -4,6 +4,8 @@ import { isUserAdmin } from "@/lib/clerk"
 
 const prisma = new PrismaClient()
 
+export const maxDuration = 300
+
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const paramsData = await params

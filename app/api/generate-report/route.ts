@@ -10,6 +10,8 @@ const prisma = new PrismaClient()
 const TAVILY_URL = "https://api.tavily.com/search"
 const TAVILY_KEY = process.env.TAVILY_API_KEY
 
+export const maxDuration = 300
+
 export async function POST(request: Request) {
   try {
     const { topic } = await request.json()
