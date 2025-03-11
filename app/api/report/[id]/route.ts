@@ -4,9 +4,10 @@ import { isUserAdmin } from "@/lib/clerk"
 
 const prisma = new PrismaClient()
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const reportId = Number.parseInt(params.id, 10)
+    const paramsData = await params
+    const reportId = Number.parseInt(paramsData.id, 10)
 
     if (isNaN(reportId)) {
       return NextResponse.json({ message: "Invalid report ID" }, { status: 400 })
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     // Check if user is admin
     const isAdmin = await isUserAdmin()
@@ -36,7 +37,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ message: "Unauthorized" }, { status: 403 })
     }
 
-    const reportId = Number.parseInt(params.id, 10)
+    const paramsData = await params
+    const reportId = Number.parseInt(paramsData.id, 10)
 
     if (isNaN(reportId)) {
       return NextResponse.json({ message: "Invalid report ID" }, { status: 400 })

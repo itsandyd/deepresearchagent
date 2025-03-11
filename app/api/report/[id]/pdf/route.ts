@@ -1,21 +1,14 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
 import { PrismaClient } from "@prisma/client"
 import { jsPDF } from "jspdf"
 
 const prisma = new PrismaClient()
 
-interface ReportParams {
-  params: {
-    id: string
-  }
-}
-
-export async function GET(
-  request: NextRequest,
-  { params }: ReportParams
-) {
+// Route handler for dynamic [id] route
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const reportId = Number.parseInt(params.id, 10)
+    const paramsData = await params
+    const reportId = parseInt(paramsData.id, 10)
 
     if (isNaN(reportId)) {
       return NextResponse.json({ message: "Invalid report ID" }, { status: 400 })
