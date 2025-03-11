@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Loader2 } from "lucide-react"
 import ReportDisplay from "@/components/report-display"
 import UserMenu from "@/components/user-menu"
+import { toast } from "sonner"
 // import { useToast } from "@/hooks/use-toast"
 // import ReportDisplay from "@/components/report-display"
 // import UserMenu from "@/components/user-menu"
@@ -23,11 +24,7 @@ export default function HomePage() {
     e.preventDefault()
 
     if (!query.trim()) {
-      // toast({
-      //   title: "Error",
-      //   description: "Please enter a research topic",
-      //   variant: "destructive",
-      // })
+      toast.error("Please enter a research topic")
       return
     }
 
@@ -47,13 +44,12 @@ export default function HomePage() {
       }
 
       const data = await res.json()
-      setReport({ content: data.report, id: data.reportId })
+      setReport({
+        content: data.report,
+        id: data.reportId,
+      })
     } catch (error) {
-      // toast({
-      //   title: "Error",
-      //   description: err.message || "Error generating report",
-      //   variant: "destructive",
-      // })
+      toast.error(error instanceof Error ? error.message : "Error generating report")
       console.error(error)
     } finally {
       setLoading(false)
