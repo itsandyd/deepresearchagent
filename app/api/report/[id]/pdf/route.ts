@@ -1,15 +1,20 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { PrismaClient } from "@prisma/client"
 import { jsPDF } from "jspdf"
 
 const prisma = new PrismaClient()
 
+interface ReportParams {
+  params: {
+    id: string
+  }
+}
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: ReportParams
 ) {
   try {
-    // No need to await params - it's already available
     const reportId = Number.parseInt(params.id, 10)
 
     if (isNaN(reportId)) {
