@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server"
-import { PrismaClient } from "@prisma/client"
+import { db } from "@/lib/db"
 import { jsPDF } from "jspdf"
-
-const prisma = new PrismaClient()
 
 export const maxDuration = 300
 
@@ -17,7 +15,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     }
 
     // Fetch the report from the database
-    const report = await prisma.report.findUnique({
+    const report = await db.report.findUnique({
       where: { id: reportId },
     })
 

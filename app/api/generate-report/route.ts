@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server"
-import { PrismaClient } from "@prisma/client"
+import { db } from "@/lib/db"
 import { generateText } from "ai"
 import { openai } from "@ai-sdk/openai"
 import { currentUser } from "@clerk/nextjs/server"
-
-const prisma = new PrismaClient()
 
 // Tavily API endpoint and key
 const TAVILY_URL = "https://api.tavily.com/search"
@@ -119,7 +117,7 @@ export async function POST(request: Request) {
     fullReport += `## Conclusion\n${conclusion}\n`
 
     // 5. Save the report to the database
-    const savedReport = await prisma.report.create({
+    const savedReport = await db.report.create({
       data: {
         query: topic,
         content: fullReport,

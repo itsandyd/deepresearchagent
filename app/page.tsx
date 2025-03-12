@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2 } from "lucide-react"
 import ReportDisplay from "@/components/report-display"
-import UserMenu from "@/components/user-menu"
 import { toast } from "sonner"
 // import { useToast } from "@/hooks/use-toast"
 // import ReportDisplay from "@/components/report-display"
@@ -63,9 +62,8 @@ export default function HomePage() {
 
   return (
     <main className="container mx-auto py-10 px-4 max-w-4xl">
-      <div className="flex justify-between items-center mb-8">
+      <div className="mb-8">
         <h1 className="text-3xl font-bold">Deep Research Agent</h1>
-        <UserMenu />
       </div>
 
       <Card className="mb-8">

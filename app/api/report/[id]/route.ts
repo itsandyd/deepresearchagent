@@ -1,8 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { PrismaClient } from "@prisma/client"
+import { db } from "@/lib/db"
 import { isUserAdmin } from "@/lib/clerk"
-
-const prisma = new PrismaClient()
 
 export const maxDuration = 300
 
@@ -15,7 +13,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ message: "Invalid report ID" }, { status: 400 })
     }
 
-    const report = await prisma.report.findUnique({
+    const report = await db.report.findUnique({
       where: { id: reportId },
     })
 
@@ -46,7 +44,7 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       return NextResponse.json({ message: "Invalid report ID" }, { status: 400 })
     }
 
-    await prisma.report.delete({
+    await db.report.delete({
       where: { id: reportId },
     })
 
