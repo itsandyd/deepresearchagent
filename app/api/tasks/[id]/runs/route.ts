@@ -34,6 +34,7 @@ export async function POST(
     const run = await db.agentRun.create({
       data: {
         taskId: task.id,
+        userId,
         status: "in_progress",
         logs: [
           {
