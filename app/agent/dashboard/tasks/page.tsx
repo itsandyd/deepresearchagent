@@ -3,35 +3,22 @@ import { Card } from "@/components/ui/card"
 import { PlusCircle, Clock, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { auth } from "@clerk/nextjs/server"
+import { redirect } from "next/navigation"
+import { db } from "@/lib/db"
 
-// This would normally be fetched from your database
-const mockTasks = [
-  {
-    id: "1",
-    name: "Research competitor products",
-    status: "completed",
-    createdAt: "2023-08-15T10:30:00Z",
-    agentType: "researcher",
-  },
-  {
-    id: "2",
-    name: "Generate marketing copy for new feature",
-    status: "in_progress",
-    createdAt: "2023-08-14T15:45:00Z",
-    agentType: "writer",
-  },
-  {
-    id: "3",
-    name: "Analyze customer feedback",
-    status: "pending",
-    createdAt: "2023-08-12T09:15:00Z",
-    agentType: "analyzer",
-  },
-]
+export default async function TasksPage() {
+  const { userId } = await auth()
 
-export default function TasksPage() {
-  // In a real implementation, you would fetch tasks from your database
-  const tasks = mockTasks
+  if (!userId) {
+    redirect("/sign-in")
+  }
+
+  // Fetch tasks from database using Prisma
+  const tasks = await db.task.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+  });
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -59,8 +46,8 @@ export default function TasksPage() {
     }
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+  const formatDate = (dateString: Date) => {
+    return dateString.toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",

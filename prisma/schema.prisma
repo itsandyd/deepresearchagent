@@ -36,11 +36,14 @@ model Task {
 model AgentRun {
   id        String    @id @default(cuid())
   taskId    String
+  userId    String
   status    String
+  messages  Json      @default("[]")
   logs      Json      @default("[]")
   output    Json?
   startedAt DateTime  @default(now())
   endedAt   DateTime?
 
   @@index([taskId])
+  @@index([userId])
 }

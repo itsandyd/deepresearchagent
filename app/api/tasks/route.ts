@@ -2,62 +2,55 @@ import { NextResponse } from "next/server"
 import { auth } from "@clerk/nextjs/server"
 import { db } from "@/lib/db"
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
     const { userId } = await auth()
-
-    // Check if user is authenticated
+    
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return new NextResponse("Unauthorized", { status: 401 })
     }
-
-    // Parse request body
-    const { name, prompt, agentType } = await request.json()
-
-    // Validate required fields
+    
+    const body = await req.json()
+    const { name, prompt, agentType } = body
+    
     if (!name || !prompt || !agentType) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+      return new NextResponse("Missing required fields", { status: 400 })
     }
-
-    // Create task in database
+    
     const task = await db.task.create({
       data: {
         name,
         prompt,
         agentType,
+        status: "pending", // Default status
         userId,
-        status: "pending",
-        result: {},
-      },
+      }
     })
-
-    // Return the created task
-    return NextResponse.json(task, { status: 201 })
+    
+    return NextResponse.json(task)
   } catch (error) {
-    console.error("Error creating task:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("[TASKS_POST]", error)
+    return new NextResponse("Internal Error", { status: 500 })
   }
 }
 
 export async function GET() {
   try {
     const { userId } = await auth()
-
-    // Check if user is authenticated
+    
     if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return new NextResponse("Unauthorized", { status: 401 })
     }
-
-    // Get tasks for the current user
+    
     const tasks = await db.task.findMany({
       where: { userId },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
     })
-
+    
     return NextResponse.json(tasks)
   } catch (error) {
-    console.error("Error fetching tasks:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("[TASKS_GET]", error)
+    return new NextResponse("Internal Error", { status: 500 })
   }
 }
 
